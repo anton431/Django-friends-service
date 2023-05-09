@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.generic import ListView
 
 from profiles.models import Profile
@@ -22,9 +24,10 @@ class ProfilesHome(DataMixin,ListView):
 
 
 
-class FindFriends(DataMixin, ListView):
+class FindFriends(LoginRequiredMixin,DataMixin, ListView):
     model = Profile
     template_name = 'profiles/find_friends.html'
+    login_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,18 +35,20 @@ class FindFriends(DataMixin, ListView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class MyFriends(DataMixin, ListView):
+class MyFriends(LoginRequiredMixin,DataMixin, ListView):
     model = Profile
     template_name = 'profiles/my_friends.html'
+    login_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Мои друзья")
         return dict(list(context.items()) + list(c_def.items()))
 
-class Applications(DataMixin, ListView):
+class Applications(LoginRequiredMixin,DataMixin, ListView):
     model = Profile
     template_name = 'profiles/applications.html'
+    login_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
