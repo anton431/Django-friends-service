@@ -72,3 +72,8 @@ nav a {
  margin-right: 10px;
  list-style: none;
 }
+
+.login a {
+ text-decoration: none;
+ color: #3b5998;
+}

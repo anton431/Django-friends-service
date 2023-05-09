@@ -24,7 +24,10 @@
    <input type="text" placeholder="Поиск...">
    <button>Найти</button>
   </div>
-   <a class="login" href="{% url exit.url_name %}">{{ exit.exit }}</a>
+     <div class="login">
+   <a  href="{% url 'register' %}">Регистрация</a> |
+     <a href="{% url exit.url_name %}">Войти</a>
+         </div>
   </header>
 {% endblock mainmenu %}
 <div>
