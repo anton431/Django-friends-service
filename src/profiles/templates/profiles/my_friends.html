@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-Мои друзья
+<h1>Мой профиль</h1>
+{{ profile.username }} <br>
+<img src={{profile.avatar.url}}></img>
+<h3>Мои друзья</h3>
+{% for friend in profile.get_friends %}
+    <li>{{friend}}</li>
+{% endfor %}
 {% endblock content %}

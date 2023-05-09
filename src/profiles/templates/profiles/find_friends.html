@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-Искать друзей
+{% for man in people %}
+<li>{{man}}</li>
+{% endfor %}
 {% endblock content %}

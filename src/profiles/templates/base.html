@@ -15,9 +15,9 @@
    </div>
   <nav>
    <ul>
-{% for m in menu %}
-    <li><a href="{% url m.url_name %}">{{m.title}}</a></li>
-{% endfor %}
+    <li><a href="{% url 'find_friends' %}">Найти друзей</a></li>
+    <li><a href="{% url 'my_friends' %}">Профиль</a></li>
+    <li><a href="{% url 'applications' %}">Заявки</a></li>
    </ul>
   </nav>
   <div class="search">
@@ -26,7 +26,7 @@
   </div>
      <div class="login">
    <a  href="{% url 'register' %}">Регистрация</a> |
-     <a href="{% url exit.url_name %}">Войти</a>
+     <a href="{% url 'login' %}">Войти</a>
          </div>
   </header>
 {% endblock mainmenu %}
