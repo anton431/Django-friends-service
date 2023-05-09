@@ -16,3 +16,5 @@ class Profile(models.Model):
         verbose_name = 'Пользователи'
         verbose_name_plural = 'Пользователи'
         ordering = ['username',]
+
+
