@@ -3,37 +3,52 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 from profiles.models import Profile
+from profiles.utils import DataMixin
+
 
 # Create your views here.
 
 
-menu = [
-        {'title': 'Найти друзей', 'url_name': 'find_friends'},
-        {'title': 'Список друзей', 'url_name': 'my_friends'},
-        {'title':'Входящие/исходящие', 'url_name': 'applications'},
-        ]
 
-exit = {'exit': 'Войти', 'url_name': 'login'}
 
-class ProfilesHome(ListView):
+class ProfilesHome(DataMixin,ListView):
     model = Profile
-    template_name = 'profiles/index.html'
+    template_name = 'base.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Главная страница'
-        context['exit'] = exit
-        return context
+        c_def = self.get_user_context(title="Главная страница")
+        return dict(list(context.items()) + list(c_def.items()))
 
-def find_friends(request):
-    return HttpResponse("Искать друзей")
 
-def my_friends(request):
-    return HttpResponse("Мои друзья")
 
-def applications(request):
-    return HttpResponse("Заявки")
+class FindFriends(DataMixin, ListView):
+    model = Profile
+    template_name = 'profiles/find_friends.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Найти друзей")
+        return dict(list(context.items()) + list(c_def.items()))
+
+
+class MyFriends(DataMixin, ListView):
+    model = Profile
+    template_name = 'profiles/my_friends.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Мои друзья")
+        return dict(list(context.items()) + list(c_def.items()))
+
+class Applications(DataMixin, ListView):
+    model = Profile
+    template_name = 'profiles/applications.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Заявки")
+        return dict(list(context.items()) + list(c_def.items()))
 
 def login(request):
     return HttpResponse('Войти')
