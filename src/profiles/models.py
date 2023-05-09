@@ -17,4 +17,21 @@ class Profile(models.Model):
         verbose_name_plural = 'Пользователи'
         ordering = ['username',]
 
+STATUS_CHOICES = (
+    ('send', 'Отправить'),
+    ('accepted', 'Принять')
+)
+
+class Relationship(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender', verbose_name='Отправитель')
+    receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver', verbose_name='Получатель')
+    status = models.CharField(max_length=8, choices=STATUS_CHOICES, verbose_name='Статус')
+
+    def __str__(self):
+        return f"{self.sender}-{self.receiver}-{self.status}"
+
+    class Meta:
+        verbose_name = 'Отношения'
+        verbose_name_plural = 'Отношения'
+
 
