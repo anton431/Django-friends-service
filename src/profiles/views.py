@@ -64,16 +64,6 @@ def my_profile_view(request):
     context = {'profile': profile,}
     return render(request,'profiles/my_friends.html', context)
 
-# class MyFriends(LoginRequiredMixin,DataMixin, ListView):
-#     model = Profile
-#     template_name = 'profiles/my_friends.html'
-#     login_url = reverse_lazy('login')
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title="Мои друзья")
-#         return dict(list(context.items()) + list(c_def.items()))
-
 @login_required
 def invites_received_view(request):
     profile = Profile.objects.get(user=request.user)
@@ -108,16 +98,6 @@ def reject_invatation(request):
         rel = get_object_or_404(Relationship, sender=sender, receiver=receiver)
         rel.delete()
     return redirect('applications')
-
-# class Applications(LoginRequiredMixin,DataMixin, ListView):
-#     model = Profile
-#     template_name = 'profiles/applications.html'
-#     login_url = reverse_lazy('login')
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title="Заявки")
-#         return dict(list(context.items()) + list(c_def.items()))
 
 def login(request):
     return HttpResponse('Войти')
