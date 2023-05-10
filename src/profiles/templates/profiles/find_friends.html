@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for man in people %}
-<li>{{man}}</li>
-{% endfor %}
+    <ul>
+    {% for item in qs %}
+        <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
 {% endblock content %}
