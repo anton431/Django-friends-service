@@ -79,15 +79,33 @@ def invites_received_view(request):
     profile = Profile.objects.get(user=request.user)
     qs = Relationship.objects.invatations_received(profile)
     qw = Relationship.objects.invatations_sended(profile)
-
+    results = list(map(lambda x: x.sender, qs))
+    resultsw = list(map(lambda x: x.receiver, qw))
     context = {
-        'qs': qs,
-        'qw': qw,
+        'qs': results,
+        'qw': resultsw,
     }
-
     return render(request, 'profiles/applications.html', context)
 
+def accept_invatation(request):
+    if request.method=="POST":
+        pk = request.POST.get('profile_pk')
+        sender = Profile.objects.get(pk=pk)
+        receiver = Profile.objects.get(user=request.user)
+        rel = get_object_or_404(Relationship, sender=sender, receiver=receiver)
+        if rel.status == 'send':
+            rel.status = 'accepted'
+            rel.save()
+    return redirect('applications')
 
+def reject_invatation(request):
+    if request.method=="POST":
+        pk = request.POST.get('profile_pk')
+        receiver = Profile.objects.get(user=request.user)
+        sender = Profile.objects.get(pk=pk)
+        rel = get_object_or_404(Relationship, sender=sender, receiver=receiver)
+        rel.delete()
+    return redirect('applications')
 
 # class Applications(LoginRequiredMixin,DataMixin, ListView):
 #     model = Profile
