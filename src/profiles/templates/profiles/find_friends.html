@@ -9,26 +9,26 @@
                     </div>
                     <div>
                         <h3>{{obj.user}}</h3>
-                        <button>See profile</button>
+                        <button>Смотреть профиль</button>
                         <br>
 
                         {% if obj.user not in rel_receiver and obj.user not in rel_sender %}
-                            <form action="" method="POST">
+                            <form action="{% url 'send-invite' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="profile_pk" value={{obj.pk}}>
-                                <button type="submit">Add to friends</button>
+                                <button type="submit">Добавить в друзья</button>
                             </form>
                          {% endif %}
 
                         {% if obj.user in rel_receiver and request.user not in obj.friends.all %}
-                            <button>Waiting for approval</button>
+                            <button>В ожидании подтверждения</button>
                         {% endif %}
 
                         {% if request.user in obj.friends.all %}
-                        <form action="" method="POST">
+                        <form action="{% url 'remove-friend' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_pk" value={{obj.pk}}>
-                            <button type="submit">Remove from friends</button>
+                            <button type="submit">Удалить из друзей</button>
                         </form>
                         {% endif %}
                     </div>
