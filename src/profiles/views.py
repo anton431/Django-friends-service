@@ -6,8 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
-
-from profiles.forms import RegisterUserForm
+from django.contrib.auth.decorators import login_required
 from profiles.models import Profile, Relationship
 from profiles.utils import DataMixin
 
@@ -26,7 +25,7 @@ class ProfilesHome(DataMixin,ListView):
         c_def = self.get_user_context(title="Главная страница")
         return dict(list(context.items()) + list(c_def.items()))
 
-
+@login_required
 def profiles_list_view(request):
     user = request.user
     qs = Profile.objects.get_all_profiles(user)
@@ -36,7 +35,6 @@ def profiles_list_view(request):
 class FindFriends(LoginRequiredMixin,DataMixin, ListView):
     model = Profile
     template_name = 'profiles/find_friends.html'
-    login_url = reverse_lazy('login')
     context_object_name = 'qs'
 
     def get_queryset(self):
@@ -60,6 +58,7 @@ class FindFriends(LoginRequiredMixin,DataMixin, ListView):
         c_def = self.get_user_context(title="Найти друзей")
         return dict(list(context.items()) + list(c_def.items()))
 
+@login_required
 def my_profile_view(request):
     profile = Profile.objects.get(user=request.user)
     context = {'profile': profile,}
@@ -75,6 +74,7 @@ def my_profile_view(request):
 #         c_def = self.get_user_context(title="Мои друзья")
 #         return dict(list(context.items()) + list(c_def.items()))
 
+@login_required
 def invites_received_view(request):
     profile = Profile.objects.get(user=request.user)
     qs = Relationship.objects.invatations_received(profile)
@@ -87,6 +87,7 @@ def invites_received_view(request):
     }
     return render(request, 'profiles/applications.html', context)
 
+@login_required
 def accept_invatation(request):
     if request.method=="POST":
         pk = request.POST.get('profile_pk')
@@ -98,6 +99,7 @@ def accept_invatation(request):
             rel.save()
     return redirect('applications')
 
+@login_required
 def reject_invatation(request):
     if request.method=="POST":
         pk = request.POST.get('profile_pk')
@@ -130,6 +132,7 @@ class RegisterUser(DataMixin,CreateView):
         c_def = self.get_user_context(title="Регистрация")
         return dict(list(context.items()) + list(c_def.items()))
 
+@login_required
 def send_invatation(request):
     if request.method=='POST':
         pk = request.POST.get('profile_pk')
@@ -142,6 +145,7 @@ def send_invatation(request):
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect('profiles:my_friends')
 
+@login_required
 def remove_from_friends(request):
     if request.method=='POST':
         pk = request.POST.get('profile_pk')
