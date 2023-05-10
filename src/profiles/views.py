@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -31,17 +32,32 @@ def profiles_list_view(request):
     context = {'qs': qs}
     return render(request, 'profiles/find_friends.html', context)
 
-# class FindFriends(LoginRequiredMixin,DataMixin, ListView):
-#     model = Profile
-#     template_name = 'profiles/find_friends.html'
-#     login_url = reverse_lazy('login')
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         people = Profile.objects.all()
-#         context['people'] = people
-#         c_def = self.get_user_context(title="Найти друзей")
-#         return dict(list(context.items()) + list(c_def.items()))
+class FindFriends(LoginRequiredMixin,DataMixin, ListView):
+    model = Profile
+    template_name = 'profiles/find_friends.html'
+    login_url = reverse_lazy('login')
+    context_object_name = 'qs'
+
+    def get_queryset(self):
+        qs = Profile.objects.get_all_profiles(self.request.user)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(username__iexact=self.request.user)
+        profile = Profile.objects.get(user=user)
+        rel_r = Relationship.objects.filter(sender=profile)
+        rel_s = Relationship.objects.filter(receiver=profile)
+        rel_receiver = []
+        rel_sender = []
+        for item in rel_r:
+            rel_receiver.append(item.receiver.user)
+        for item in rel_s:
+            rel_sender.append(item.sender.user)
+        context["rel_receiver"] = rel_receiver
+        context["rel_sender"] = rel_sender
+        c_def = self.get_user_context(title="Найти друзей")
+        return dict(list(context.items()) + list(c_def.items()))
 
 def my_profile_view(request):
     profile = Profile.objects.get(user=request.user)
