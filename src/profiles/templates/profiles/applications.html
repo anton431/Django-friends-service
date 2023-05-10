@@ -10,9 +10,6 @@
                     <div>
                         <h3>{{obj.user}}</h3>
                         <br>
-                        <a href="">
-                            <button>Смотреть профиль</button>
-                        </a>
                         <form action="{% url 'accept-invite' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" value={{obj.pk}}>
@@ -42,9 +39,6 @@
                     <div>
                         <h3>{{obc.user}}</h3>
                         <br>
-                        <a href="">
-                            <button>Смотреть профиль</button>
-                        </a>
                         <button>В ожидании подтверждения</button>
                     </div>
                 </div>
