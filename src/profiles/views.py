@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.decorators import login_required
+
+from profiles.forms import RegisterProfileForm
 from profiles.models import Profile, Relationship
 
 
@@ -80,9 +82,9 @@ def reject_invatation(request):
     return redirect('applications')
 
 class RegisterUser(CreateView):
-    form_class = UserCreationForm
+    form_class = RegisterProfileForm
     template_name = 'profiles/register.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('home')
 
 @login_required
 def send_invatation(request):
