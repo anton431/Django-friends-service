@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>{{ title }}</title>
+ <title>{% block title %}Главная страница{% endblock title %}</title>
  <meta charset="UTF-8">
  <link rel="stylesheet" type="text/css" href="{% static 'profiles/css/style.css' %}">
  <link rel="shortcut icon" href="{% static 'profiles/images/main.ico' %}" type="image/x-icon"/>

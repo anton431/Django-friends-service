@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Заявки{% endblock title %}
 {% block content %}
     {% for obj in qs %}
         <div class="ui segment">
@@ -12,7 +13,7 @@
                         <br>
                         <form action="{% url 'accept-invite' %}" method="POST">
                             {% csrf_token %}
-                            <input type="hidden" value={{obj.pk}}>
+                            <input type="hidden" name="profile_pk" value={{obj.pk}}>
                             <button type="submit" >
                                 Принять
                             </button>

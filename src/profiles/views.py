@@ -2,37 +2,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.decorators import login_required
 from profiles.models import Profile, Relationship
-from profiles.utils import DataMixin
 
 
-# Create your views here.
-
-
-
-
-class ProfilesHome(DataMixin,ListView):
+class ProfilesHome(ListView):
     model = Profile
     template_name = 'base.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Главная страница")
-        return dict(list(context.items()) + list(c_def.items()))
-
-@login_required
-def profiles_list_view(request):
-    user = request.user
-    qs = Profile.objects.get_all_profiles(user)
-    context = {'qs': qs}
-    return render(request, 'profiles/find_friends.html', context)
-
-class FindFriends(LoginRequiredMixin,DataMixin, ListView):
+class FindFriends(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'profiles/find_friends.html'
     context_object_name = 'qs'
@@ -55,8 +36,7 @@ class FindFriends(LoginRequiredMixin,DataMixin, ListView):
             rel_sender.append(item.sender.user)
         context["rel_receiver"] = rel_receiver
         context["rel_sender"] = rel_sender
-        c_def = self.get_user_context(title="Найти друзей")
-        return dict(list(context.items()) + list(c_def.items()))
+        return context
 
 @login_required
 def my_profile_view(request):
@@ -79,7 +59,7 @@ def invites_received_view(request):
 
 @login_required
 def accept_invatation(request):
-    if request.method=="POST":
+    if request.method == "POST":
         pk = request.POST.get('profile_pk')
         sender = Profile.objects.get(pk=pk)
         receiver = Profile.objects.get(user=request.user)
@@ -91,7 +71,7 @@ def accept_invatation(request):
 
 @login_required
 def reject_invatation(request):
-    if request.method=="POST":
+    if request.method == "POST":
         pk = request.POST.get('profile_pk')
         receiver = Profile.objects.get(user=request.user)
         sender = Profile.objects.get(pk=pk)
@@ -99,18 +79,10 @@ def reject_invatation(request):
         rel.delete()
     return redirect('applications')
 
-def login(request):
-    return HttpResponse('Войти')
-
-class RegisterUser(DataMixin,CreateView):
+class RegisterUser(CreateView):
     form_class = UserCreationForm
     template_name = 'profiles/register.html'
     success_url = reverse_lazy('login')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Регистрация")
-        return dict(list(context.items()) + list(c_def.items()))
 
 @login_required
 def send_invatation(request):
