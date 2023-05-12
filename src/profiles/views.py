@@ -1,4 +1,3 @@
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -59,11 +58,6 @@ def my_profile_view(request):
     }
 
     return render(request, 'profiles/my_friends.html', context)
-# @login_required
-# def my_profile_view(request):
-#     profile = Profile.objects.get(user=request.user)
-#     context = {'profile': profile,}
-#     return render(request,'profiles/my_friends.html', context)
 
 @login_required
 def invites_received_view(request):
