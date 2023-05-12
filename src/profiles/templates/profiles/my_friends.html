@@ -3,13 +3,26 @@
 {% block content %}
 <div class="container">
 
-<div class="profile-pic">
-<img src={{profile.avatar.url}} alt="">
+<div>
+  <div>
+    <div>
+      <img width="200" src="{{profile.avatar.url}}">
+    </div>
+    <div>
+     <form action="" method="POST" enctype='multipart/form-data'>
+        {% csrf_token %}
+        {{form.as_p}}
+    </div>
+  </div>
+  <div class="actions">
+    <button type='submit'>
+      Обновить
+    </button>
+    </form>
+  </div>
 </div>
 
-
 <h1>{{profile.user}}</h1>
-<h3>{{profile.username}} </h3>
 
 <table >
 <tr><th>Друзья:</th>

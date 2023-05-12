@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.decorators import login_required
 
-from profiles.forms import RegisterProfileForm
+from profiles.forms import RegisterProfileForm, ProfileModelForm
 from profiles.models import Profile, Relationship
 
 
@@ -40,11 +40,30 @@ class FindFriends(LoginRequiredMixin, ListView):
         context["rel_sender"] = rel_sender
         return context
 
+
 @login_required
 def my_profile_view(request):
     profile = Profile.objects.get(user=request.user)
-    context = {'profile': profile,}
-    return render(request,'profiles/my_friends.html', context)
+    form = ProfileModelForm(request.POST or None, request.FILES or None, instance=profile)
+    confirm = False
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            confirm = True
+
+    context = {
+        'profile': profile,
+        'form': form,
+        'confirm': confirm,
+    }
+
+    return render(request, 'profiles/my_friends.html', context)
+# @login_required
+# def my_profile_view(request):
+#     profile = Profile.objects.get(user=request.user)
+#     context = {'profile': profile,}
+#     return render(request,'profiles/my_friends.html', context)
 
 @login_required
 def invites_received_view(request):

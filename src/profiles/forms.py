@@ -1,9 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-
-
 from .models import Profile
 
+
+class ProfileModelForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('avatar',)
 
 class RegisterProfileForm(UserCreationForm):
     username = forms.CharField(label='Логин',
